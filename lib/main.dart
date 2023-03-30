@@ -92,21 +92,28 @@ class _MyHomePageState extends State<MyHomePage> {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 10),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
                               width: 150,
                               height: 55,
                               child: CardButton(
-                                backColor: (wsProvier.realmSelect == wsProvier.realm.kw!.data[i]['id'])
+                                backColor: (wsProvier.realmSelect ==
+                                        wsProvier.realm.kw!.data[i]['id'])
                                     ? const Color(0xFFFFEB3B)
                                     : Colors.lightBlue,
                                 onTapCard: () {
-                                  wsProvier.realmSelect = wsProvier.realm.kw!.data[i]['id'];
+                                  wsProvier.realmSelect =
+                                      wsProvier.realm.kw!.data[i]['id'];
                                   wsProvier.realmIconSelect = icon;
                                   wsProvier.send(mtCommandToJson(
-                                      wsProvier.setEvMtCommand(('1 realm_id=${wsProvier.realm.kw!.data[i]['id']}'))));
+                                      wsProvier.setEvMtCommand(
+                                          ('1 realm_id=${wsProvier.realm.kw!.data[i]['id']}'))));
                                 },
-                                srcIcon: (icon != '') ? icon : 'assets/svg/ic_real.svg',
-                                text: '${wsProvier.realm.kw!.data[i]['realm_role'] ?? '-'}',
+                                srcIcon: (icon != '')
+                                    ? icon
+                                    : 'assets/svg/ic_real.svg',
+                                text:
+                                    '${wsProvier.realm.kw!.data[i]['realm_role'] ?? '-'}',
                               ),
                             )
                           ],
@@ -117,21 +124,26 @@ class _MyHomePageState extends State<MyHomePage> {
               if (wsProvier.yunos.event != null)
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 10),
                     child: ListView.builder(
                         shrinkWrap: true,
                         itemCount: wsProvier.yunos.kw!.data.length,
                         itemBuilder: (_, e) {
                           List<dynamic> lists = [];
-                          if (wsProvier.yunoRole != wsProvier.yunos.kw!.data[e]['yuno_role']) {
-                            wsProvier.yunoRole = wsProvier.yunos.kw!.data[e]['yuno_role'];
+                          if (wsProvier.yunoRole !=
+                              wsProvier.yunos.kw!.data[e]['yuno_role']) {
+                            wsProvier.yunoRole =
+                                wsProvier.yunos.kw!.data[e]['yuno_role'];
                             lists.clear();
                             for (var l in wsProvier.yunos.kw!.data) {
                               if (l['yuno_role'] == wsProvier.yunoRole) {
                                 lists.add(l);
                               }
                             }
-                            lists.sort((a, b) => a['yuno_name'].toString().compareTo(b['yuno_name'].toString()));
+                            lists.sort((a, b) => a['yuno_name']
+                                .toString()
+                                .compareTo(b['yuno_name'].toString()));
                           }
 
                           return Column(
@@ -139,22 +151,27 @@ class _MyHomePageState extends State<MyHomePage> {
                               if (lists.isNotEmpty) ...[
                                 Text(
                                   wsProvier.yunoRole,
-                                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                  style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
                                 ),
                                 const SizedBox(height: 10),
                                 Container(
                                   height: 130,
                                   color: Colors.transparent,
-                                  padding: const EdgeInsets.symmetric(vertical: 10),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 10),
                                   child: ListView.builder(
                                       scrollDirection: Axis.horizontal,
                                       itemCount: lists.length,
                                       itemBuilder: (_, i) {
                                         String icon = '';
-                                        icon = selectIcon(lists[i]['realm_id'].first);
+                                        icon = selectIcon(
+                                            lists[i]['realm_id'].first);
                                         return Container(
                                           width: 150,
-                                          margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                                          margin: const EdgeInsets.symmetric(
+                                              horizontal: 5, vertical: 10),
                                           child: CardButton(
                                             backColor: const Color(0xFFFFFFFF),
                                             borderColor: Colors.blueAccent,
@@ -165,7 +182,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                                   context: context,
                                                   builder: (context) {
                                                     return CustomDialogBox(
-                                                      icon: (icon != '') ? icon : 'assets/svg/ic_yuno.svg',
+                                                      icon: (icon != '')
+                                                          ? icon
+                                                          : 'assets/svg/ic_yuno.svg',
                                                       yunoId: lists[i]['id'],
                                                       text: 'Boton',
                                                       title:
@@ -181,8 +200,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                               });
                                               */
                                             },
-                                            infoIcon: (lists[i]['yuno_running']) ? 'assets/svg/ic_info.svg' : null,
-                                            srcIcon: (icon != '') ? icon : 'assets/svg/ic_yuno.svg',
+                                            infoIcon: (lists[i]['yuno_running'])
+                                                ? 'assets/svg/ic_info.svg'
+                                                : null,
+                                            srcIcon: (icon != '')
+                                                ? icon
+                                                : 'assets/svg/ic_yuno.svg',
                                             text:
                                                 '${lists[i]['yuno_name'] ?? '-'}\n${lists[i]['yuno_role'] ?? '-'}\n${lists[i]['yuno_release'] ?? '-'}',
                                           ),
