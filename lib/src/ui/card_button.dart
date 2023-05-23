@@ -31,9 +31,9 @@ class CardButton extends StatelessWidget {
           color: backColor,
           border: Border.all(
             color: (borderColor != null) ? borderColor! : backColor,
-            width: 3,
+            width: 2,
           ),
-          borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+          borderRadius: const BorderRadius.all(Radius.circular(30.0)),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.3),
@@ -88,9 +88,11 @@ class CardButton extends StatelessWidget {
               ],
             ),
             if (text != '')
-              Text(
-                text,
-                textAlign: TextAlign.center,
+              FittedBox(
+                child: Text(
+                  text,
+                  textAlign: TextAlign.center,
+                ),
               ),
           ],
         ),

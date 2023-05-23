@@ -1,6 +1,10 @@
-part of './services.dart';
+part of './providers.dart';
 
 class WSProvier with ChangeNotifier {
+  String server = '';
+  String serverName = '';
+  bool? ack;
+  late WebSocketChannel _channel;
   bool addLogHandler = false;
   bool setGclassTrace = false;
 
@@ -8,6 +12,13 @@ class WSProvier with ChangeNotifier {
   RespCommand get respCommand => _respCommand;
   set respCommand(RespCommand data) {
     _respCommand = data;
+    notifyListeners();
+  }
+
+  RespCommand _displaySummary = RespCommand();
+  RespCommand get displaySummary => _displaySummary;
+  set displaySummary(RespCommand data) {
+    _displaySummary = data;
     notifyListeners();
   }
 
@@ -39,6 +50,20 @@ class WSProvier with ChangeNotifier {
     notifyListeners();
   }
 
+  RespCommand _getTraceFilter = RespCommand();
+  RespCommand get getTraceFilter => _getTraceFilter;
+  set getTraceFilter(RespCommand data) {
+    _getTraceFilter = data;
+    notifyListeners();
+  }
+
+  RespCommand _getAttrs = RespCommand();
+  RespCommand get getAttrs => _getAttrs;
+  set getAttrs(RespCommand data) {
+    _getAttrs = data;
+    notifyListeners();
+  }
+
   String _realmSelect = '';
   String get realmSelect => _realmSelect;
   set realmSelect(String data) {
@@ -53,13 +78,15 @@ class WSProvier with ChangeNotifier {
     notifyListeners();
   }
 
-  String _yunoRole = '';
-  String get yunoRole => _yunoRole;
-  set yunoRole(String data) {
-    _yunoRole = data;
-  }
+  String yunoRole = '';
 
-  final WebSocketChannel _channel = WebSocketChannel.connect(Uri.parse('ws://127.0.0.1:1991'));
+  connectServer({required String data, required String name}) {
+    serverName = name;
+    server = data;
+
+    _channel = WebSocketChannel.connect(Uri.parse('ws://$server:1991'));
+    notifyListeners();
+  }
 
   void send(String data) {
     _channel.sink.add(data);
@@ -79,27 +106,31 @@ class WSProvier with ChangeNotifier {
         playing: false,
         pid: 7949,
         watcherPid: 0,
-        jwt: "",
+        jwt: Storages.getToken.accessToken,
         username: "yuneta",
         launchId: 0,
         yunoStartdate: "2023-03-16T16:43:23.689088869+0100",
         id: "8ac4d42f-5e1f-48d6-818c-6ac39cbba3e4",
         requiredServices: [],
-        mdIev: MdIev(ieventGateStack: [
-          IeventGateStack(
-              dstYuno: "",
-              dstRole: "yuneta_agent",
-              dstService: "agent",
-              srcYuno: "",
-              srcRole: "yuneta_cli",
-              srcService: "ws://127.0.0.1:1991-1",
-              user: "yuneta",
-              host: "luis-laptop")
-        ])),
+        mdIev: MdIev(ieventGateStack: [IeventGateStack(dstYuno: "", dstRole: "yuneta_agent", dstService: "agent", srcYuno: "", srcRole: "yuneta_cli", srcService: "ws://127.0.0.1:1991-1", user: "yuneta", host: "luis-laptop")])),
   );
 
   webSocketListen() {
-    _channel.stream.listen(_onDataReceived);
+    try {
+      _channel.stream.listen(_onDataReceived, onError: _onError, onDone: () {});
+    } on SocketException catch (_) {}
+  }
+
+  _onError(dynamic data) {
+    ack = null;
+    server = '';
+    serverName = '';
+    notifyListeners();
+    showAlertOK(
+      icon: 'assets/svg/ic-error.svg',
+      title: 'Error comunicacion',
+      content: 'Verificar comunicacion con servidor',
+    );
   }
 
   void _onDataReceived(dynamic data) {
@@ -113,7 +144,8 @@ class WSProvier with ChangeNotifier {
     if (message['kw']['result'] == 0) {
       if (message['event'] == "EV_IDENTITY_CARD_ACK") {
         debugPrint('IDENTITY ACK OK');
-        //debugPrint(eventAckFromJson(data).kw!.comment);
+        ack = true;
+        //debugPrint(data.toString());
       }
 
       if (message['event'] == "EV_MT_COMMAND_ANSWER") {
@@ -145,14 +177,32 @@ class WSProvier with ChangeNotifier {
           case 'add-log-handler':
             addLogHandler = true;
             break;
+          case 'get-trace-filter':
+            getTraceFilter = respCommand;
+            break;
+          case 'set-trace-filter':
+            getTraceFilter = respCommand;
+            break;
+          case 'display-summary':
+            displaySummary = respCommand;
+            break;
+          case 'view-attrs':
+            getAttrs = respCommand;
+            break;
           default:
-            print(command[0]);
+            if (kDebugMode) {
+              print(command[0]);
+            }
         }
       }
     } else {
-      debugPrint(message['event']);
-      debugPrint(message['kw']['comment']);
+      if (message['event'] == "EV_IDENTITY_CARD_ACK") {
+        debugPrint('IDENTITY FAILURE');
+        ack = false;
+      }
+      debugPrint(message.toString());
     }
+    notifyListeners();
   }
 
   MtCommand setEvMtCommand(String command) {

@@ -9,6 +9,7 @@ class DrawerCustom extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final wsProvier = Provider.of<WSProvier>(context);
     return SizedBox(
       width: 150,
       child: Drawer(
@@ -35,24 +36,52 @@ class DrawerCustom extends StatelessWidget {
                 ],
               ),
             ),
-            botonMenu(icon: 'assets/svg/ic_realm.svg', command: '4', context: context),
-            botonMenu(icon: 'assets/svg/ic_yuno.svg', command: '1', context: context),
+            botonMenu(
+              icon: 'assets/svg/ic_nodos.svg',
+              context: context,
+              routeName: RouterPages.home.name,
+            ),
+            if (wsProvier.server != '') ...[
+              botonMenu(
+                icon: 'assets/svg/ic_realm.svg',
+                command: '4',
+                context: context,
+                routeName: RouterPages.realms.name,
+              ),
+              botonMenu(
+                icon: 'assets/svg/ic_yuno.svg',
+                command: '1',
+                context: context,
+                routeName: RouterPages.yunos.name,
+              ),
+              botonMenu(
+                icon: 'assets/svg/ic_summary.svg',
+                command: 'command-yuno yuno_role=logcenter command=display-summary',
+                context: context,
+                routeName: RouterPages.summary.name,
+              ),
+            ],
           ],
         ),
       ),
     );
   }
 
-  Widget botonMenu({required String icon, String? command, required BuildContext context}) {
+  Widget botonMenu({
+    required String icon,
+    String? command,
+    required BuildContext context,
+    required String routeName,
+  }) {
     final wsProvier = Provider.of<WSProvier>(context, listen: false);
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 5),
       height: 60,
-      width: 60,
       child: CardButton(
-        backColor: const Color(0xFFFFEB3B),
+        backColor: Colors.white,
         onTapCard: () {
-          wsProvier.send(mtCommandToJson(setEvMtCommand(command ?? '')));
+          if (command != null) wsProvier.send(mtCommandToJson(setEvMtCommand(command)));
+          Navigator.pushReplacementNamed(context, routeName);
         },
         srcIcon: icon,
         text: '',
@@ -62,24 +91,26 @@ class DrawerCustom extends StatelessWidget {
 
   MtCommand setEvMtCommand(String command) {
     return MtCommand(
-        event: "EV_MT_COMMAND",
+      event: "EV_MT_COMMAND",
+      command: command,
+      kw: KwCommand(
         command: command,
-        kw: KwCommand(
-            command: command,
-            temp: eventIdentity.kw!.temp,
-            mdIev: MdIevCommand(command: [
-              command
-            ], ieventGateStack: [
-              IeventGateStack(
-                dstRole: eventIdentity.kw!.mdIev!.ieventGateStack!.first.dstRole,
-                dstService: eventIdentity.kw!.mdIev!.ieventGateStack!.first.dstService,
-                dstYuno: eventIdentity.kw!.mdIev!.ieventGateStack!.first.dstYuno,
-                host: eventIdentity.kw!.mdIev!.ieventGateStack!.first.host,
-                srcRole: eventIdentity.kw!.mdIev!.ieventGateStack!.first.srcRole,
-                srcService: "cli",
-                srcYuno: eventIdentity.kw!.mdIev!.ieventGateStack!.first.srcYuno,
-                user: eventIdentity.kw!.mdIev!.ieventGateStack!.first.user,
-              )
-            ])));
+        temp: eventIdentity.kw!.temp,
+        mdIev: MdIevCommand(command: [
+          command
+        ], ieventGateStack: [
+          IeventGateStack(
+            dstRole: eventIdentity.kw!.mdIev!.ieventGateStack!.first.dstRole,
+            dstService: eventIdentity.kw!.mdIev!.ieventGateStack!.first.dstService,
+            dstYuno: eventIdentity.kw!.mdIev!.ieventGateStack!.first.dstYuno,
+            host: eventIdentity.kw!.mdIev!.ieventGateStack!.first.host,
+            srcRole: eventIdentity.kw!.mdIev!.ieventGateStack!.first.srcRole,
+            srcService: "cli",
+            srcYuno: eventIdentity.kw!.mdIev!.ieventGateStack!.first.srcYuno,
+            user: eventIdentity.kw!.mdIev!.ieventGateStack!.first.user,
+          )
+        ]),
+      ),
+    );
   }
 }
