@@ -5,7 +5,7 @@ class CardButton extends StatelessWidget {
   final String? srcIcon, infoIcon;
   final bool? stateYuno;
   final Color backColor;
-  final Color? borderColor;
+  final Color? borderColor, textColor;
   final Function()? onTapCard, onTapInfo;
 
   const CardButton({
@@ -18,6 +18,7 @@ class CardButton extends StatelessWidget {
     this.onTapInfo,
     this.infoIcon,
     this.stateYuno,
+    this.textColor,
   });
 
   @override
@@ -33,7 +34,7 @@ class CardButton extends StatelessWidget {
             color: (borderColor != null) ? borderColor! : backColor,
             width: 2,
           ),
-          borderRadius: const BorderRadius.all(Radius.circular(30.0)),
+          borderRadius: const BorderRadius.all(Radius.circular(15.0)),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.3),
@@ -92,6 +93,7 @@ class CardButton extends StatelessWidget {
                 child: Text(
                   text,
                   textAlign: TextAlign.center,
+                  style: TextStyle(color: textColor),
                 ),
               ),
           ],

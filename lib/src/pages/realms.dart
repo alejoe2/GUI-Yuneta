@@ -21,7 +21,7 @@ class _RealmsPageState extends State<RealmsPage> {
               children: [
                 Container(
                   padding: const EdgeInsets.symmetric(vertical: 10),
-                  color: Colors.blueAccent,
+                  color: TColors.seconRed,
                   height: 100,
                   width: double.infinity,
                   child: ListView.builder(
@@ -39,7 +39,7 @@ class _RealmsPageState extends State<RealmsPage> {
                             width: 150,
                             height: 55,
                             child: CardButton(
-                              backColor: (wsProvier.realmSelect == wsProvier.realm.kw!.data[i]['id']) ? const Color(0xFFFFEB3B) : Colors.lightBlue,
+                              backColor: (wsProvier.realmSelect == wsProvier.realm.kw!.data[i]['id']) ? TColors.priRed : Colors.white.withOpacity(0.8),
                               onTapCard: () {
                                 wsProvier.realmSelect = wsProvier.realm.kw!.data[i]['id'];
                                 wsProvier.realmIconSelect = icon;
@@ -47,6 +47,7 @@ class _RealmsPageState extends State<RealmsPage> {
                               },
                               srcIcon: (icon != '') ? icon : 'assets/svg/ic_real.svg',
                               text: '${wsProvier.realm.kw!.data[i]['realm_role'] ?? '-'}',
+                              textColor: (wsProvier.realmSelect == wsProvier.realm.kw!.data[i]['id']) ? TColors.priWithe : TColors.priRed,
                             ),
                           )
                         ],

@@ -4,6 +4,7 @@ AppBar customAppBar({required BuildContext context, String title = ''}) {
   final authProvider = Provider.of<AuthProvider>(context);
   final wsProvier = Provider.of<WSProvier>(context);
   return AppBar(
+    backgroundColor: TColors.priRed,
     title: Center(child: Text(title)),
     actions: <Widget>[
       Padding(

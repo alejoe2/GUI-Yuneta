@@ -18,3 +18,4 @@ part 'alerts/alert_ok.dart';
 part 'alerts/custom_alert.dart';
 part 'appbar/custom_appbar.dart';
 part 'card/list_yunos.dart';
+part 'design/back_figures.dart';

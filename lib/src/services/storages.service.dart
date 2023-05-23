@@ -39,4 +39,8 @@ class Storages {
   static List<String> get getYunoList => LocalStorage.prefs.getStringList(StorageUbication.yunoList.name) != null ? LocalStorage.prefs.getStringList(StorageUbication.yunoList.name)! : [];
 
   static Future<bool> get removeYunoList async => await LocalStorage.prefs.remove(StorageUbication.yunoList.name);
+
+  static Future<bool> setSelectMenuDrawer({required String data}) async => LocalStorage.prefs.setString(StorageUbication.menuDrawer.name, data);
+
+  static String get getSelectedMenuDrawer => LocalStorage.prefs.getString(StorageUbication.menuDrawer.name) != null ? LocalStorage.prefs.getString(StorageUbication.menuDrawer.name)! : '';
 }

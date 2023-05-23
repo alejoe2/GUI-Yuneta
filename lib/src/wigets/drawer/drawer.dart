@@ -16,8 +16,8 @@ class DrawerCustom extends StatelessWidget {
         child: ListView(
           children: [
             DrawerHeader(
-              decoration: const BoxDecoration(
-                color: Colors.blue,
+              decoration: BoxDecoration(
+                color: TColors.priRed,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -74,14 +74,17 @@ class DrawerCustom extends StatelessWidget {
     required String routeName,
   }) {
     final wsProvier = Provider.of<WSProvier>(context, listen: false);
+
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 5),
       height: 60,
       child: CardButton(
-        backColor: Colors.white,
+        backColor: (Storages.getSelectedMenuDrawer == routeName) ? TColors.priRed : TColors.priWithe,
+        borderColor: TColors.seconRed,
         onTapCard: () {
           if (command != null) wsProvier.send(mtCommandToJson(setEvMtCommand(command)));
           Navigator.pushReplacementNamed(context, routeName);
+          Storages.setSelectMenuDrawer(data: routeName);
         },
         srcIcon: icon,
         text: '',

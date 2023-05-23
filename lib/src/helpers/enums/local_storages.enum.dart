@@ -1,3 +1,3 @@
 part of './../helpers.dart';
 
-enum StorageUbication { theme, loadPermission, cantNotiPush, jwt, credentials, tokenPush, user, passLocal, qr, pushNotification, notifications, yunoList }
+enum StorageUbication { menuDrawer, theme, loadPermission, cantNotiPush, jwt, credentials, tokenPush, user, passLocal, qr, pushNotification, notifications, yunoList }
