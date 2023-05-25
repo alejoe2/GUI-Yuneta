@@ -46,7 +46,9 @@ class CustomDialogBoxState extends State<CustomDialogBox> {
     wsProvier.getGclassTrace.kw = null;
     wsProvier.addLogHandler = false;
     wsProvier.setGclassTrace = false;
-
+    menuOpen = null;
+    receiverlog.clear();
+    receiverlogShow.clear();
     ready = true;
     setState(() {});
   }
@@ -247,7 +249,7 @@ class CustomDialogBoxState extends State<CustomDialogBox> {
             }
             w++;
           } while (w < len);
-          search(findController.text);
+          if (mounted) search(findController.text);
         });
       },
       child: SvgPicture.asset(
@@ -343,8 +345,8 @@ class CustomDialogBoxState extends State<CustomDialogBox> {
                                 sendFilter(wsProvier);
                               },
                               child: Icon(
-                                (wsProvier.getTraceFilter.kw!.data == null) ? Icons.send : Icons.delete,
-                                color: (wsProvier.getTraceFilter.kw!.data == null) ? Colors.blue : Colors.red,
+                                (wsProvier.getTraceFilter.kw?.data == null) ? Icons.send : Icons.delete,
+                                color: (wsProvier.getTraceFilter.kw?.data == null) ? Colors.blue : Colors.red,
                               ),
                             ),
                             prefixIcon: const Icon(
