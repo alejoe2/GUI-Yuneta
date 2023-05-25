@@ -100,7 +100,11 @@ class _SymmaryPageState extends State<SymmaryPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
-                                  children: [Text('${entry3.key}', style: const TextStyle(fontWeight: FontWeight.w600)), if (entry3.value is! Map) Text(': ${entry3.value}')],
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Expanded(child: Text('${entry3.key}', style: const TextStyle(fontWeight: FontWeight.w600))), if (entry3.value is! Map) Text(': ${entry3.value}')
+                                  ],
                                 ),
                                 if (entry3.value is Map)
                                   ...entry3.value.entries.map((entry4) {

@@ -22,7 +22,6 @@ class BackSquare extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(NavigatonServices.navigatiorKey.currentContext!).size;
     return Container(
       width: 200,
       height: 200,

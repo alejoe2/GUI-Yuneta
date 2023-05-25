@@ -168,9 +168,9 @@ class CustomDialogBoxState extends State<CustomDialogBox> {
         menuOpen = 'log';
         setState(() {});
         publicIp = await getPublicIp();
-        //print(publicIp);
+        print(publicIp);
         localIP = await getLocalIpAddress();
-        //print(localIP);
+        print(localIP);
 
         wsProvier.send(mtCommandToJson(wsProvier.setEvMtCommand('command-yuno id=${widget.yunoId}  service=__root__ command=info-gclass-trace')));
 
@@ -193,7 +193,7 @@ class CustomDialogBoxState extends State<CustomDialogBox> {
         List<String> getYunoList = Storages.getYunoList;
         for (var yuno in getYunoList) {
           wsProvier.send(mtCommandToJson(wsProvier.setEvMtCommand('command-yuno id=$yuno service=__yuno__ command=delete-log-handler name=${Storages.getUser.email!.split('@')[0]}')));
-          await Future.delayed(const Duration(milliseconds: 50));
+          await Future.delayed(const Duration(milliseconds: 100));
         }
         getYunoList.clear();
 
@@ -255,6 +255,8 @@ class CustomDialogBoxState extends State<CustomDialogBox> {
       child: SvgPicture.asset(
         'assets/svg/ic_logs.svg',
         fit: BoxFit.contain,
+        height: 30,
+        width: 30,
       ),
     );
   }
@@ -308,86 +310,87 @@ class CustomDialogBoxState extends State<CustomDialogBox> {
                   ),
                 ],
               ),
-              child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, crossAxisAlignment: CrossAxisAlignment.center, children: [
-                SizedBox(
-                  width: 250,
-                  child: TextField(
-                    controller: findController,
-                    decoration: InputDecoration(
-                      hintText: 'Buscar',
-                      prefixIcon: const Icon(Icons.search),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide.none,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly, 
+                crossAxisAlignment: CrossAxisAlignment.center, 
+                children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.20,
+                    child: TextField(
+                      controller: findController,
+                      decoration: InputDecoration(
+                        hintText: 'Buscar',
+                        prefixIcon: const Icon(Icons.search),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
+                        ),
+                        filled: true,
+                        fillColor: Colors.white,
                       ),
-                      filled: true,
-                      fillColor: Colors.white,
+                      onChanged: (value) {
+                        search(value);
+                      },
                     ),
-                    onChanged: (value) {
-                      search(value);
-                    },
                   ),
-                ),
-                SizedBox(
-                  width: 250,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          controller: filterController,
-                          onSubmitted: (value) {
-                            sendFilter(wsProvier);
-                          },
-                          decoration: InputDecoration(
-                            hintText: 'Filtrar ID',
-                            suffixIcon: InkWell(
-                              onTap: () async {
-                                sendFilter(wsProvier);
-                              },
-                              child: Icon(
-                                (wsProvier.getTraceFilter.kw?.data == null) ? Icons.send : Icons.delete,
-                                color: (wsProvier.getTraceFilter.kw?.data == null) ? Colors.blue : Colors.red,
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.20,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: filterController,
+                            onSubmitted: (value) {
+                              sendFilter(wsProvier);
+                            },
+                            decoration: InputDecoration(
+                              hintText: 'Filtrar ID',
+                              suffixIcon: InkWell(
+                                onTap: () async => sendFilter(wsProvier),
+                                child: Icon(
+                                  (wsProvier.getTraceFilter.kw?.data == null) ? Icons.send : Icons.delete,
+                                  color: (wsProvier.getTraceFilter.kw?.data == null) ? Colors.blue : Colors.red,
+                                ),
                               ),
+                              prefixIcon: const Icon(
+                                Icons.filter_alt,
+                                color: Colors.blue,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide.none,
+                              ),
+                              filled: true,
+                              fillColor: (wsProvier.getTraceFilter.kw!.data == null) ? Colors.white : Colors.grey[350],
                             ),
-                            prefixIcon: const Icon(
-                              Icons.filter_alt,
-                              color: Colors.blue,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide.none,
-                            ),
-                            filled: true,
-                            fillColor: (wsProvier.getTraceFilter.kw!.data == null) ? Colors.white : Colors.grey[350],
+                            readOnly: (wsProvier.getTraceFilter.kw!.data == null) ? false : true,
+                            onChanged: (value) {},
                           ),
-                          readOnly: (wsProvier.getTraceFilter.kw!.data == null) ? false : true,
-                          onChanged: (value) {},
+                        ),
+                        const SizedBox(width: 5),
+                      ],
+                    ),
+                  ),
+                  InkWell(
+                    child: Container(
+                      width: 45,
+                      height: 50,
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10.0),
                         ),
                       ),
-                      const SizedBox(width: 5),
-                    ],
-                  ),
-                ),
-                InkWell(
-                  child: Container(
-                    width: 45,
-                    height: 50,
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(10.0),
+                      child: SvgPicture.asset(
+                        'assets/svg/ic_trash.svg',
+                        fit: BoxFit.contain,
                       ),
                     ),
-                    child: SvgPicture.asset(
-                      'assets/svg/ic_trash.svg',
-                      fit: BoxFit.contain,
-                    ),
+                    onTap: () {
+                      receiverlog = [];
+                      search(findController.text);
+                    },
                   ),
-                  onTap: () {
-                    receiverlog = [];
-                    search(findController.text);
-                  },
-                ),
               ]),
             ),
             Expanded(
