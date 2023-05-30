@@ -310,87 +310,84 @@ class CustomDialogBoxState extends State<CustomDialogBox> {
                   ),
                 ],
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly, 
-                crossAxisAlignment: CrossAxisAlignment.center, 
-                children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.20,
-                    child: TextField(
-                      controller: findController,
-                      decoration: InputDecoration(
-                        hintText: 'Buscar',
-                        prefixIcon: const Icon(Icons.search),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none,
-                        ),
-                        filled: true,
-                        fillColor: Colors.white,
+              child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, crossAxisAlignment: CrossAxisAlignment.center, children: [
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.20,
+                  child: TextField(
+                    controller: findController,
+                    decoration: InputDecoration(
+                      hintText: 'Buscar',
+                      prefixIcon: const Icon(Icons.search),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide.none,
                       ),
-                      onChanged: (value) {
-                        search(value);
-                      },
+                      filled: true,
+                      fillColor: Colors.white,
                     ),
-                  ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.20,
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: TextField(
-                            controller: filterController,
-                            onSubmitted: (value) {
-                              sendFilter(wsProvier);
-                            },
-                            decoration: InputDecoration(
-                              hintText: 'Filtrar ID',
-                              suffixIcon: InkWell(
-                                onTap: () async => sendFilter(wsProvier),
-                                child: Icon(
-                                  (wsProvier.getTraceFilter.kw?.data == null) ? Icons.send : Icons.delete,
-                                  color: (wsProvier.getTraceFilter.kw?.data == null) ? Colors.blue : Colors.red,
-                                ),
-                              ),
-                              prefixIcon: const Icon(
-                                Icons.filter_alt,
-                                color: Colors.blue,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide.none,
-                              ),
-                              filled: true,
-                              fillColor: (wsProvier.getTraceFilter.kw!.data == null) ? Colors.white : Colors.grey[350],
-                            ),
-                            readOnly: (wsProvier.getTraceFilter.kw!.data == null) ? false : true,
-                            onChanged: (value) {},
-                          ),
-                        ),
-                        const SizedBox(width: 5),
-                      ],
-                    ),
-                  ),
-                  InkWell(
-                    child: Container(
-                      width: 45,
-                      height: 50,
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10.0),
-                        ),
-                      ),
-                      child: SvgPicture.asset(
-                        'assets/svg/ic_trash.svg',
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                    onTap: () {
-                      receiverlog = [];
-                      search(findController.text);
+                    onChanged: (value) {
+                      search(value);
                     },
                   ),
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.20,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: filterController,
+                          onSubmitted: (value) {
+                            sendFilter(wsProvier);
+                          },
+                          decoration: InputDecoration(
+                            hintText: 'Filtrar ID',
+                            suffixIcon: InkWell(
+                              onTap: () async => sendFilter(wsProvier),
+                              child: Icon(
+                                (wsProvier.getTraceFilter.kw?.data == null) ? Icons.send : Icons.delete,
+                                color: (wsProvier.getTraceFilter.kw?.data == null) ? Colors.blue : Colors.red,
+                              ),
+                            ),
+                            prefixIcon: const Icon(
+                              Icons.filter_alt,
+                              color: Colors.blue,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide.none,
+                            ),
+                            filled: true,
+                            fillColor: (wsProvier.getTraceFilter.kw!.data == null) ? Colors.white : Colors.grey[350],
+                          ),
+                          readOnly: (wsProvier.getTraceFilter.kw!.data == null) ? false : true,
+                          onChanged: (value) {},
+                        ),
+                      ),
+                      const SizedBox(width: 5),
+                    ],
+                  ),
+                ),
+                InkWell(
+                  child: Container(
+                    width: 45,
+                    height: 50,
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10.0),
+                      ),
+                    ),
+                    child: SvgPicture.asset(
+                      'assets/svg/ic_trash.svg',
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                  onTap: () {
+                    receiverlog = [];
+                    search(findController.text);
+                  },
+                ),
               ]),
             ),
             Expanded(
@@ -503,65 +500,65 @@ class CustomDialogBoxState extends State<CustomDialogBox> {
           : ListView.builder(
               itemCount: wsProvier.infoGclassTrace.kw!.data.length,
               itemBuilder: (_, i) {
-                if (wsProvier.infoGclassTrace.kw!.data[i]['gclass'].toString().toUpperCase().contains(widget.yunoRole!.toUpperCase())) {
-                  return Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            wsProvier.infoGclassTrace.kw!.data[i]['gclass'],
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          ...wsProvier.infoGclassTrace.kw!.data[i]['trace_levels'].keys.map((t) {
-                            bool state = false;
-                            for (var traceT in wsProvier.getGclassTrace.kw!.data) {
-                              if (traceT['gclass'] == wsProvier.infoGclassTrace.kw!.data[i]['gclass']) {
-                                for (var traceL in traceT['trace_levels']) {
-                                  if (t == traceL) {
-                                    state = true;
-                                  }
+                //if (wsProvier.infoGclassTrace.kw!.data[i]['gclass'].toString().toUpperCase().contains(widget.yunoRole!.toUpperCase())) {
+                return Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          wsProvier.infoGclassTrace.kw!.data[i]['gclass'],
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        ...wsProvier.infoGclassTrace.kw!.data[i]['trace_levels'].keys.map((t) {
+                          bool state = false;
+                          for (var traceT in wsProvier.getGclassTrace.kw!.data) {
+                            if (traceT['gclass'] == wsProvier.infoGclassTrace.kw!.data[i]['gclass']) {
+                              for (var traceL in traceT['trace_levels']) {
+                                if (t == traceL) {
+                                  state = true;
                                 }
                               }
                             }
+                          }
 
-                            return Row(
-                              children: [
-                                Text(t.toString()),
-                                const SizedBox(width: 5),
-                                Switch(
-                                    value: state,
-                                    onChanged: (value) {
-                                      String command = 'command-yuno id=${widget.yunoId} service=__root__ command=set-gclass-trace gclass=${wsProvier.infoGclassTrace.kw!.data[i]['gclass']} level=$t set=${(value) ? 1 : 0}';
-                                      wsProvier.send(mtCommandToJson(wsProvier.setEvMtCommand(command)));
+                          return Row(
+                            children: [
+                              Text(t.toString()),
+                              const SizedBox(width: 5),
+                              Switch(
+                                  value: state,
+                                  onChanged: (value) {
+                                    String command = 'command-yuno id=${widget.yunoId} service=__root__ command=set-gclass-trace gclass=${wsProvier.infoGclassTrace.kw!.data[i]['gclass']} level=$t set=${(value) ? 1 : 0}';
+                                    wsProvier.send(mtCommandToJson(wsProvier.setEvMtCommand(command)));
 
-                                      bool addTraceT = false;
-                                      for (var traceT in wsProvier.getGclassTrace.kw!.data) {
-                                        if (traceT['gclass'] == wsProvier.infoGclassTrace.kw!.data[i]['gclass']) {
-                                          addTraceT = true;
-                                          if (value) {
-                                            traceT['trace_levels'].add(t);
-                                          } else {
-                                            traceT['trace_levels'].remove(t);
-                                          }
+                                    bool addTraceT = false;
+                                    for (var traceT in wsProvier.getGclassTrace.kw!.data) {
+                                      if (traceT['gclass'] == wsProvier.infoGclassTrace.kw!.data[i]['gclass']) {
+                                        addTraceT = true;
+                                        if (value) {
+                                          traceT['trace_levels'].add(t);
+                                        } else {
+                                          traceT['trace_levels'].remove(t);
                                         }
                                       }
-                                      if (!addTraceT) {
-                                        wsProvier.getGclassTrace.kw!.data.add({
-                                          "gclass": wsProvier.infoGclassTrace.kw!.data[i]['gclass'],
-                                          "trace_levels": [t]
-                                        });
-                                      }
-                                      setState(() {});
-                                    })
-                              ],
-                            );
-                          }).toList(),
-                        ],
-                      ));
-                } else {
-                  return Container();
-                }
+                                    }
+                                    if (!addTraceT) {
+                                      wsProvier.getGclassTrace.kw!.data.add({
+                                        "gclass": wsProvier.infoGclassTrace.kw!.data[i]['gclass'],
+                                        "trace_levels": [t]
+                                      });
+                                    }
+                                    setState(() {});
+                                  })
+                            ],
+                          );
+                        }).toList(),
+                      ],
+                    ));
+                // } else {
+                //   return Container();
+                // }
               },
             ),
     );
