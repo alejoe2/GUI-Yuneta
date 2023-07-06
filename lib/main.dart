@@ -60,7 +60,7 @@ class MyApp extends StatelessWidget {
         }
         return supportedLocales.first;
       },
-      title: 'Flutter Demo',
+      title: 'GUI Yuneta',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
